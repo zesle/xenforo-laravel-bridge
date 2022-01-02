@@ -6,7 +6,7 @@ use XF\Mvc\ParameterBag;
 
 class Bridge extends \XF\Pub\Controller\AbstractController
 {
-    const FORUM_HMAC_SECRET = '';
+    use ConfigTrait;
 
     public function actionIndex(ParameterBag $params)
     {
@@ -46,7 +46,7 @@ class Bridge extends \XF\Pub\Controller\AbstractController
         $sign = $output['sign'] ?? 'sign';
         $email = $output['email'] ?? 'email';
 
-        if (hash_equals($sign, \hash_hmac('sha256', $email, self::FORUM_HMAC_SECRET))) {
+        if (hash_equals($sign, \hash_hmac('sha256', $email, $this->_FORUM_HMAC_SECRET))) {
             return $email;
         }
 

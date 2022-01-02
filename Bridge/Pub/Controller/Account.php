@@ -174,24 +174,7 @@ class Account extends \XF\Pub\Controller\AbstractController
 
     public function actionEmail()
     {
-        $visitor = \XF::visitor();
-        $auth = $visitor->Auth->getAuthenticationHandler();
-        if (!$auth) {
-            return $this->noPermission();
-        }
-
-        if ($this->isPost()) {
-            $this->emailSaveProcess($visitor)->run();
-
-            return $this->redirect($this->buildLink('account/account-details'));
-        } else {
-            $viewParams = [
-                'hasPassword' => $auth->hasPassword(),
-            ];
-            $view = $this->view('XF:Account\Email', 'account_email', $viewParams);
-
-            return $this->addAccountWrapperParams($view, 'account_details');
-        }
+        return $this->redirect('https://zeslecp.com/dashboard/profile');
     }
 
     protected function emailSaveProcess(\XF\Entity\User $visitor)
@@ -668,48 +651,7 @@ class Account extends \XF\Pub\Controller\AbstractController
 
     public function actionSecurity()
     {
-        $visitor = \XF::visitor();
-        $auth = $visitor->Auth->getAuthenticationHandler();
-        if (!$auth) {
-            return $this->noPermission();
-        }
-
-        $redirect = $this->getDynamicRedirect($this->buildLink('account/security'), false);
-
-        if ($this->isPost()) {
-            $passwordChange = $this->setupPasswordChange();
-            if (!$passwordChange->isValid($error)) {
-                return $this->error($error);
-            }
-
-            $passwordChange->setInvalidateRememberKeys(false); // about to handle this
-            $passwordChange->save();
-
-            $this->plugin('XF:Login')->handleVisitorPasswordChange();
-
-            return $this->redirect($redirect);
-        } else {
-            /** @var \XF\Repository\Tfa $tfaRepo */
-            $tfaRepo = $this->repository('XF:Tfa');
-            $enabledProviders = [];
-            $userId = $visitor->user_id;
-
-            foreach ($tfaRepo->getValidProviderList($userId) as $provider) {
-                if ($provider->isEnabled($userId)) {
-                    $enabledProviders[] = $provider->getTitle();
-                }
-            }
-
-            $viewParams = [
-                'hasPassword' => $auth->hasPassword(),
-                'enabledTfaProviders' => $enabledProviders,
-                'isSecurityLocked' => boolval($visitor->security_lock),
-                'redirect' => $redirect,
-            ];
-
-            $view = $this->view('XF:Account\Security', 'account_security', $viewParams);
-            return $this->addAccountWrapperParams($view, 'security');
-        }
+        return $this->redirect('https://zeslecp.com/dashboard/profile');
     }
 
     /**
